@@ -1,0 +1,50 @@
+.App {
+  text-align: center;
+  background-color: black;
+}
+
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.data-container {
+  width: 25rem;
+  margin: auto;
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  animation: slideInFromTop 0.5s ease-out;
+}
+
+.data-container:hover,
+.active {
+  transform: scale(1.1);
+  transition: transform 0.5s;
+  background: rgba(255, 255, 255, 0.099);
+}
+
+.parent-container {
+  border: 1px solid white;
+  width: 32rem;
+  height: fit-content;
+  margin: auto;
+  margin-top: 6.25rem;
+  overflow: hidden;
+  border-radius: 1rem;
+}
