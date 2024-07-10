@@ -24,41 +24,45 @@ function DivChangeComponent() {
   }, [allData.length]);
 
   const pauseInterval = (event) => {
+    const container = event.currentTarget;
     if (event.pointerType === "touch") {
       touchStartedInside.current = true;
-      event.target.addEventListener("touchstart", handleTouchStart, {
+      container.addEventListener("touchstart", handleTouchStart, {
         passive: true,
       });
-      event.target.classList.add("active");
+      container.classList.add("active");
       clearInterval(interval.current);
     } else {
       touchStartedInside.current = false;
-      event.target.classList.add("active");
+      container.classList.add("active");
       clearInterval(interval.current);
     }
   };
 
   const handleTouchStart = (event) => {
+    const container = event.currentTarget;
     if (!touchStartedInside.current) return;
-    event.target.addEventListener("touchend", handleTouchEnd, {
+    container.addEventListener("touchend", handleTouchEnd, {
       passive: true,
     });
     console.log(event, "add Touch event");
   };
 
   const handleTouchEnd = (event) => {
+    const container = event.currentTarget;
     if (!touchStartedInside.current) return;
-    event.target.removeEventListener("touchend", handleTouchEnd);
+    container.removeEventListener("touchend", handleTouchEnd);
     touchStartedInside.current = false;
-    event.target.classList.remove("active");
+    container.classList.remove("active");
     console.log(event, "remove Touch event");
     startInterval();
   };
 
   const resumeInterval = (event) => {
+    const container = event.currentTarget;
     console.log(event, "event");
     if (event.pointerType !== "touch" && !touchStartedInside.current) {
-      event.target.classList.remove("active");
+      container.classList.remove("active");
       console.log(event, "remove event");
       startInterval();
     }
