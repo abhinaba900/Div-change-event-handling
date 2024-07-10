@@ -11,33 +11,57 @@ function DivChangeComponent() {
   React.useEffect(() => {
     startInterval();
     return () => clearInterval(interval.current);
-  }, [currentIndex]); // Only change the interval when currentIndex changes
+  }, []);
 
   React.useEffect(() => {
-    setMainData([allData[currentIndex]]); // Update mainData when allData or currentIndex changes
+    setMainData([allData[currentIndex]]);
   }, [allData, currentIndex]);
 
-  const startInterval = () => {
+  const startInterval = React.useCallback(() => {
     interval.current = setInterval(() => {
-      const nextIndex = (currentIndex + 1) % allData.length;
-      setCurrentIndex(nextIndex);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % allData.length);
     }, 3000);
-  };
+  }, [allData.length]);
 
   const pauseInterval = (event) => {
-    clearInterval(interval.current);
     if (event.pointerType === "touch") {
       touchStartedInside.current = true;
+      event.target.addEventListener("touchstart", handleTouchStart, {
+        passive: true,
+      });
+      event.target.classList.add("active");
+      clearInterval(interval.current);
+    } else {
+      touchStartedInside.current = false;
+      event.target.classList.add("active");
+      clearInterval(interval.current);
     }
-    console.log(event, "event on start section");
+  };
+
+  const handleTouchStart = (event) => {
+    if (!touchStartedInside.current) return;
+    event.target.addEventListener("touchend", handleTouchEnd, {
+      passive: true,
+    });
+    console.log(event, "add Touch event");
+  };
+
+  const handleTouchEnd = (event) => {
+    if (!touchStartedInside.current) return;
+    event.target.removeEventListener("touchend", handleTouchEnd);
+    touchStartedInside.current = false;
+    event.target.classList.remove("active");
+    console.log(event, "remove Touch event");
+    startInterval();
   };
 
   const resumeInterval = (event) => {
-    if (event.pointerType === "touch" && !touchStartedInside.current) {
-      return;
+    console.log(event, "event");
+    if (event.pointerType !== "touch" && !touchStartedInside.current) {
+      event.target.classList.remove("active");
+      console.log(event, "remove event");
+      startInterval();
     }
-    console.log(event, "event on end section");
-    startInterval();
   };
 
   return (
@@ -48,12 +72,11 @@ function DivChangeComponent() {
           className="data-container"
           onPointerEnter={pauseInterval}
           onPointerLeave={resumeInterval}
-          onClick={() => setCurrentIndex(index)}
           tabIndex={0}
         >
           <p>{data.id}</p>
           <h1>{data.name}</h1>
-          <p>{data.desctiption}</p> {/* Corrected spelling */}
+          <p>{data.desctiption}</p>
         </div>
       ))}
     </div>
